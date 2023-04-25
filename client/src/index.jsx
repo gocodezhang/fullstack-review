@@ -8,6 +8,7 @@ import httpRequest from './parse.js';
 const App = () => {
 
   const [repos, setRepos] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     console.log('refreshed');
@@ -20,9 +21,10 @@ const App = () => {
     //   error: () => {console.log('Fail to send POST to server')}
     // });
     httpRequest.get((data) => {
+      console.log(data);
       setRepos(data);
     })
-  },[])
+  },[refresh])
 
 
   const search = (term) => {
@@ -38,12 +40,8 @@ const App = () => {
     //   error: () => {console.log('Fail to send POST to server')}
     // });
     httpRequest.post(term, function() {
-      httpRequest.get(
-        function (data) {
-          setRepos(data);
-        }
-      )}
-    )
+      setRefresh(refresh ? false : true);
+    });
   }
 
   return (

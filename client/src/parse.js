@@ -12,7 +12,7 @@ const httpRequest = {
       error: () => {console.log('Fail to send POST to server')}
     })
   },
-  post: function(term, callback) {
+  post: function(term, callback = () => {}) {
     console.log('Post request called');
     $.ajax({
     url: 'http://localhost:1128/repos',

@@ -10,7 +10,8 @@ let repoSchema = mongoose.Schema({
   forks_count: Number,
   owner_id: Number,
   owner_name: String,
-  create_at: String
+  create_at: String,
+  status: String
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
@@ -28,14 +29,19 @@ let save = (repos) => {
       forks_count: repo.forks_count,
       owner_id: repo.owner.id,
       owner_name: repo.owner.login,
-      create_at: Date()
+      create_at: Date(),
+      status: 'imported'
     }
     return obj;
   })
 
-  return Repo.create(repoArr)
-    .then(() => {console.log('successfully saved in DB')})
-    .catch(() => {console.log('Error when save repos in DB')});
+  return Repo.updateMany({}, {'status': 'updated'}).exec()
+    .then(() => {
+      Repo.create(repoArr)
+      .then(() => {console.log('successfully saved in DB')})
+      .catch((err) => {console.log(err)});
+    })
+    .catch(() => {console.log('Error when update status in DB')})
 }
 
 let query = () => {
